@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'MOOHA',
-          style: TextStyle(color: Colors.black),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,

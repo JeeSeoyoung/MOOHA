@@ -15,11 +15,29 @@ class MoohaApp extends StatelessWidget {
         backgroundColor: const Color(0xFFFFFDF5),
         // scaffoldBackgroundColor: const Color(0xFFFFFDF5),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            )),
+        textTheme: const TextTheme(
+          headline1: TextStyle(
+              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w600),
+          headline2: TextStyle(
+              color: Colors.black,
+              fontSize: 12.0,
+              fontWeight: FontWeight.normal),
+          headline3: TextStyle(
+              color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w600),
+          bodyText1: TextStyle(
+              color: Colors.black,
+              fontSize: 16.0,
+              fontWeight: FontWeight.normal),
         ),
       ),
       initialRoute: '/login',

@@ -60,6 +60,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logo.png
+    - assets/emoji-angry.png
+    - assets/emoji-dizzy.png
+    - assets/emoji-expressionless.png
+    - assets/emoji-frown.png
+    - assets/emoji-laughing.png
+    - assets/emoji-smile.png
+    - assets/emoji-sunglasses.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
