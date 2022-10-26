@@ -41,13 +41,48 @@ class _WritingPageState extends State<WritingPage> {
               '오늘의 기분을 이모지로 기록해요',
               style: Theme.of(context).textTheme.headline3,
             ),
+            SizedBox(height: 20.0),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.emoji_emotions)),
-                IconButton(onPressed: () {}, icon: Icon(Icons.face)),
-                IconButton(onPressed: () {}, icon: Icon(Icons.face)),
+                ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                  child: Image.asset('assets/emoji-smile.png'),
+                ),
+                ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                  child: Image.asset('assets/emoji-angry.png'),
+                ),
+                ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                  child: Image.asset('assets/emoji-dizzy.png'),
+                ),
+                ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                  child: Image.asset('assets/emoji-expressionless.png'),
+                ),
+                ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                  child: Image.asset('assets/emoji-frown.png'),
+                ),
+                ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                  child: Image.asset('assets/emoji-laughing.png'),
+                ),
+                ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                  child: Image.asset('assets/emoji-sunglasses.png'),
+                ),
               ],
             ),
+            SizedBox(height: 20.0),
             Container(
               padding: EdgeInsets.all(30.0),
               height: 300.0,
@@ -74,4 +109,14 @@ class _WritingPageState extends State<WritingPage> {
       ),
     );
   }
+}
+
+GestureDetector MoodButton(Image, Color) {
+  return GestureDetector(
+    onTap: () {},
+    child: ColorFiltered(
+      colorFilter: ColorFilter.mode(Colors.white, BlendMode.modulate),
+      child: Image.asset('assets/emoji-sunglasses.png'),
+    ),
+  );
 }
