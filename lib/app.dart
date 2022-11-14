@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'home.dart';
 import 'login.dart';
-import 'writingPage.dart';
+import 'writing_page.dart';
 
 class MoohaApp extends StatelessWidget {
   const MoohaApp({Key? key}) : super(key: key);

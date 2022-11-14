@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.menu,
                   color: Colors.black,
                 ))),
@@ -29,20 +30,21 @@ class HomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).backgroundColor,
         child: ListView(),
       ),
-      body: Container(
-        alignment: Alignment.center,
-        child: OutlinedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, '/writePage');
-            },
-            icon: Icon(
-              Icons.create,
-              color: Colors.black,
-            ),
-            label: Text(
-              '일기쓰기',
-              style: TextStyle(color: Colors.black),
-            )),
+      body: Column(
+        children: [
+          OutlinedButton.icon(
+              onPressed: () {
+                Navigator.pushNamed(context, '/writePage');
+              },
+              icon: const Icon(
+                Icons.create,
+                color: Colors.black,
+              ),
+              label: const Text(
+                '일기쓰기',
+                style: TextStyle(color: Colors.black),
+              )),
+        ],
       ),
     );
   }

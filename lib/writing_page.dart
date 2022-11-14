@@ -8,8 +8,8 @@ class WritingPage extends StatefulWidget {
 }
 
 class _WritingPageState extends State<WritingPage> {
-  final TextEditingController _titleController = new TextEditingController();
-  final TextEditingController _contentController = new TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,7 @@ class _WritingPageState extends State<WritingPage> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,59 +36,59 @@ class _WritingPageState extends State<WritingPage> {
               '9월 21일 수요일',
               style: Theme.of(context).textTheme.headline1,
             ),
-            SizedBox(height: 30.0),
+            const SizedBox(height: 30.0),
             Text(
               '오늘의 기분을 이모지로 기록해요',
               style: Theme.of(context).textTheme.headline3,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                      const ColorFilter.mode(Colors.white, BlendMode.modulate),
                   child: Image.asset('assets/emoji-smile.png'),
                 ),
                 ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                      const ColorFilter.mode(Colors.white, BlendMode.modulate),
                   child: Image.asset('assets/emoji-angry.png'),
                 ),
                 ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                      const ColorFilter.mode(Colors.white, BlendMode.modulate),
                   child: Image.asset('assets/emoji-dizzy.png'),
                 ),
                 ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                      const ColorFilter.mode(Colors.white, BlendMode.modulate),
                   child: Image.asset('assets/emoji-expressionless.png'),
                 ),
                 ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                      const ColorFilter.mode(Colors.white, BlendMode.modulate),
                   child: Image.asset('assets/emoji-frown.png'),
                 ),
                 ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                      const ColorFilter.mode(Colors.white, BlendMode.modulate),
                   child: Image.asset('assets/emoji-laughing.png'),
                 ),
                 ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.modulate),
+                      const ColorFilter.mode(Colors.white, BlendMode.modulate),
                   child: Image.asset('assets/emoji-sunglasses.png'),
                 ),
               ],
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Container(
-              padding: EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(30.0),
               height: 300.0,
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -98,7 +98,7 @@ class _WritingPageState extends State<WritingPage> {
                   children: [
                     TextField(
                       controller: _titleController,
-                      decoration: InputDecoration(hintText: '제목을 입력하세요'),
+                      decoration: const InputDecoration(hintText: '제목을 입력하세요'),
                     ),
                   ],
                 ),
@@ -111,12 +111,12 @@ class _WritingPageState extends State<WritingPage> {
   }
 }
 
-GestureDetector MoodButton(Image, Color) {
-  return GestureDetector(
-    onTap: () {},
-    child: ColorFiltered(
-      colorFilter: ColorFilter.mode(Colors.white, BlendMode.modulate),
-      child: Image.asset('assets/emoji-sunglasses.png'),
-    ),
-  );
-}
+// GestureDetector moodButton(Image, Color) {
+//   return GestureDetector(
+//     onTap: () {},
+//     child: ColorFiltered(
+//       colorFilter: const ColorFilter.mode(Colors.white, BlendMode.modulate),
+//       child: Image.asset('assets/emoji-sunglasses.png'),
+//     ),
+//   );
+// }
