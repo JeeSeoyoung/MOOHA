@@ -6,7 +6,7 @@ This App is Calender for Recording today's Mood
 
 Flutter
 
-## Language
+## Server
 
 Firebase
 
