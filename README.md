@@ -1,10 +1,14 @@
 # mooha
 
-A new Flutter project.
+This App is Calender for Recording today's Mood
 
-## Getting Started
+## Language
 
-This project is a starting point for a Flutter application.
+Flutter
+
+## Language
+
+Firebase
 
 A few resources to get you started if this is your first Flutter project:
 
