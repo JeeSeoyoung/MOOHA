@@ -75,11 +75,10 @@ class _CalenderState extends State<Calender> {
 
   // get _markedDateMap => null;
   static Widget _eventIcon = new Container(
-      // decoration: new BoxDecoration(
-      //     color: Colors.white,
-      //     borderRadius: BorderRadius.all(Radius.circular(1000)),
-      //     border: Border.all(color: Colors.blue, width: 2.0)),
-      child: Image.asset('assets/emoji-angry.png'));
+      child: Image.asset(
+    'assets/emoji-smile.png',
+    color: Colors.blue,
+  ));
   EventList<Event> _markedDateMap = new EventList<Event>(
     events: {
       new DateTime(2022, 11, 10): [
@@ -87,12 +86,6 @@ class _CalenderState extends State<Calender> {
           date: new DateTime(2022, 11, 10),
           title: 'Event 1',
           icon: _eventIcon,
-          // dot: Container(
-          //   margin: EdgeInsets.symmetric(horizontal: 1.0),
-          //   color: Colors.red,
-          //   height: 5.0,
-          //   width: 5.0,
-          // ),
         ),
       ],
     },
@@ -101,9 +94,36 @@ class _CalenderState extends State<Calender> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(30.0),
+      margin: EdgeInsets.all(20.0),
       child: CalendarCarousel<Event>(
-        todayBorderColor: Colors.green,
+        //calender format
+        showOnlyCurrentMonthDate: true,
+        weekFormat: false,
+        height: 340.0,
+        customGridViewPhysics: NeverScrollableScrollPhysics(),
+        //header (prev/next month)
+        showHeader: true,
+        headerMargin: EdgeInsets.symmetric(vertical: 10.0),
+        headerTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 16.0,
+        ),
+        //circular Border
+        daysHaveCircularBorder: true,
+        //today button
+        todayBorderColor: Colors.red,
+        todayTextStyle: TextStyle(
+          color: Colors.black,
+        ),
+        todayButtonColor: Colors.transparent,
+
+        //selected button
+        selectedDateTime: _currentDate2,
+        selectedDayTextStyle: TextStyle(
+          color: Colors.white,
+        ),
+        selectedDayBorderColor: Colors.transparent,
+        selectedDayButtonColor: Colors.red,
         onDayPressed: (date, events) {
           this.setState(() {
             _currentDate2 = date;
@@ -112,34 +132,15 @@ class _CalenderState extends State<Calender> {
           events.forEach((event) => print(event.title));
           print(date);
         },
-        daysHaveCircularBorder: true,
-        showOnlyCurrentMonthDate: true,
-        weekendTextStyle: TextStyle(
-          color: Colors.red,
-        ),
-        // thisMonthDayBorderColor: Colors.grey,
-        weekFormat: false,
-//      firstDayOfWeek: 4,
+
+        //marked button
+        markedDateIconMargin: 2.0,
         markedDatesMap: _markedDateMap,
-        height: 420.0,
-        selectedDateTime: _currentDate2,
-        targetDateTime: _targetDateTime,
-        customGridViewPhysics: NeverScrollableScrollPhysics(),
         markedDateCustomShapeBorder:
             CircleBorder(side: BorderSide(color: Colors.transparent)),
         markedDateCustomTextStyle: TextStyle(
           fontSize: 18,
           color: Colors.transparent,
-        ),
-        showHeader: true,
-        weekdayTextStyle: TextStyle(color: Colors.black),
-        headerMargin: EdgeInsets.symmetric(vertical: 10.0),
-        headerTextStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        todayTextStyle: TextStyle(
-          color: Colors.blue,
         ),
         markedDateShowIcon: true,
         markedDateIconMaxShown: 2,
@@ -147,12 +148,15 @@ class _CalenderState extends State<Calender> {
           return event.icon;
         },
         markedDateMoreShowTotal: true,
-        todayButtonColor: Colors.transparent,
-        selectedDayTextStyle: TextStyle(
-          color: Colors.black,
+
+        //weekday text
+        weekdayTextStyle: TextStyle(color: Colors.black),
+        //weekend text
+        weekendTextStyle: TextStyle(
+          color: Colors.red,
         ),
-        selectedDayBorderColor: Colors.red,
-        selectedDayButtonColor: Colors.red,
+
+        targetDateTime: _targetDateTime,
         minSelectedDate: _currentDate.subtract(Duration(days: 360)),
         maxSelectedDate: _currentDate.add(Duration(days: 360)),
         prevDaysTextStyle: TextStyle(
@@ -168,9 +172,6 @@ class _CalenderState extends State<Calender> {
             _targetDateTime = date;
             _currentMonth = DateFormat.yMMM().format(_targetDateTime);
           });
-        },
-        onDayLongPressed: (DateTime date) {
-          print('long pressed date $date');
         },
       ),
     );
