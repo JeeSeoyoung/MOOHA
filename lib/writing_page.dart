@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class WritingPage extends StatelessWidget {
   final DateTime checkedDate;
@@ -10,6 +11,9 @@ class WritingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final year = DateFormat('yyyy').format(checkedDate);
+    final monthAndDay = DateFormat('MM월 dd일').format(checkedDate);
+    final dayOfWeek = DateFormat.E('ko_KR').format(checkedDate);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -27,11 +31,11 @@ class WritingPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '2022',
+              '${year}',
               style: Theme.of(context).textTheme.headline2,
             ),
             Text(
-              '${checkedDate}',
+              '${monthAndDay} ${dayOfWeek}요일',
               style: Theme.of(context).textTheme.headline1,
             ),
             const SizedBox(height: 30.0),
