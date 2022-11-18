@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class WritingPage extends StatefulWidget {
-  const WritingPage({Key? key}) : super(key: key);
+class WritingPage extends StatelessWidget {
+  final DateTime checkedDate;
+  WritingPage({Key? key, required this.checkedDate}) : super(key: key);
 
-  @override
-  State<WritingPage> createState() => _WritingPageState();
-}
-
-class _WritingPageState extends State<WritingPage> {
   final TextEditingController _titleController = TextEditingController();
+
   final TextEditingController _contentController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +31,7 @@ class _WritingPageState extends State<WritingPage> {
               style: Theme.of(context).textTheme.headline2,
             ),
             Text(
-              '9월 21일 수요일',
+              '${checkedDate}',
               style: Theme.of(context).textTheme.headline1,
             ),
             const SizedBox(height: 30.0),

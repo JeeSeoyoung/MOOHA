@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1045964229167",
+    "project_id": "mooha-aa395",
+    "storage_bucket": "mooha-aa395.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045964229167:android:50ed224dd42e18697b94da",
+        "android_client_info": {
+          "package_name": "com.example.mooha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045964229167-qhr0995753btqoke2rmbmd9aukbjpegp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYM9v_GkIuL2ftIjvk2zid0YLssOO4FYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045964229167-qhr0995753btqoke2rmbmd9aukbjpegp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
