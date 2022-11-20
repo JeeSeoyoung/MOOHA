@@ -134,13 +134,3 @@ class WritingPage extends StatelessWidget {
     );
   }
 }
-
-// GestureDetector moodButton(Image, Color) {
-//   return GestureDetector(
-//     onTap: () {},
-//     child: ColorFiltered(
-//       colorFilter: const ColorFilter.mode(Colors.white, BlendMode.modulate),
-//       child: Image.asset('assets/emoji-sunglasses.png'),
-//     ),
-//   );
-// }
