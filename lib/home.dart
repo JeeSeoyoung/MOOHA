@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:mooha/services/firebase_auth_methods.dart';
 import 'package:mooha/writing_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 DateTime checkedDate = DateTime.now();
 
@@ -11,7 +13,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // DateTime checkedDate = DateTime.now();
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -34,7 +36,46 @@ class HomePage extends StatelessWidget {
       ),
       drawer: Drawer(
         backgroundColor: Theme.of(context).backgroundColor,
-        child: ListView(),
+        child: ListView(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 38.0),
+              height: 180,
+              color: const Color(0xFFFFF6D1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 120.0,
+                  ),
+                  const Text(
+                    'MOOHA',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                  ),
+                  const SizedBox(
+                    height: 9.0,
+                  ),
+                  Text(
+                    '${user?.email}',
+                    style: const TextStyle(fontSize: 12.0),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Column(
+                children: [
+                  _buildMenu(Icons.home, '홈', context),
+                  _buildMenu(Icons.book, '일기장', context),
+                  _buildMenu(Icons.photo_album, '갤러리', context),
+                  _buildMenu(Icons.logout, '로그아웃', context),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -48,6 +89,34 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+ListTile _buildMenu(IconData icon, String label, BuildContext context) {
+  return ListTile(
+    leading: Icon(
+      icon,
+      color: Colors.black,
+      // size: 20,
+    ),
+    title: Text(
+      label,
+      // style: TextStyle(fontSize: 12.0),
+    ),
+    onTap: () async {
+      if (label == '홈') {
+        Navigator.pop(context);
+      } else {
+        if (label == '일기장')
+          Navigator.pop(context);
+        else if (label == '갤러리')
+          Navigator.pop(context);
+        else if (label == '로그아웃') {
+          await FirebaseAuthMethods.logout();
+          Navigator.pushNamed(context, '/login');
+        }
+      }
+    },
+  );
 }
 
 class Calender extends StatefulWidget {

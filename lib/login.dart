@@ -1,13 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mooha/services/firebase_auth_methods.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
+  Future<UserCredential?> LoginWithGoogle(BuildContext context) async {
+    GoogleSignInAccount? user = await FirebaseAuthMethods.login();
 
-class _LoginPageState extends State<LoginPage> {
+    GoogleSignInAuthentication? googleAuth = await user!.authentication;
+    var credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+    UserCredential? userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    if (userCredential != null) {
+      print('login success ====> Google');
+      print(userCredential);
+
+      Navigator.pop(context);
+    } else {
+      print('login fail');
+    }
+    return userCredential;
+  }
+
+  Future AddUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final name = user?.displayName;
+    final email = user?.email;
+    final uid = user?.uid;
+    final docUser = FirebaseFirestore.instance.collection('user').doc(uid);
+    final json = {
+      'name': name,
+      'email': email,
+      'uid': uid,
+    };
+    await docUser.set(json);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,8 +60,9 @@ class _LoginPageState extends State<LoginPage> {
                   height: 87,
                 ),
                 ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                    onPressed: () async {
+                      await LoginWithGoogle(context);
+                      AddUser();
                     },
                     child: const Text('Sign in with Google'))
               ],
