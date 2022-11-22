@@ -15,11 +15,20 @@ class ApplicationsState extends ChangeNotifier {
   StreamSubscription<QuerySnapshot>? _diaryStreamSubscription;
   List<DiaryDetail> _diaryDetail = [];
   List<DiaryDetail> get diaryDetail => _diaryDetail;
+  Map mood = {
+    1: 'smile',
+    2: 'angry',
+    3: 'dizzy',
+    4: 'expressionless',
+    5: 'frown',
+    6: 'laughing',
+    7: 'sunglasses',
+  };
 
-  static eventIcon(String mood) => Container(
-          child: Image.asset(
-        'assets/emoji-${mood}.png',
-      ));
+  // static final Widget _eventIcon = Container(
+  //     child: Image.asset(
+  //   'assets/emoji-dizzy.png',
+  // ));
   // List<List<dynamic>> _markedDateList = [];
   // List<List<dynamic>> get markedDateList => _markedDateList;
 
@@ -49,16 +58,20 @@ class ApplicationsState extends ChangeNotifier {
           _diaryDetail.add(
             DiaryDetail(
                 datetime: document.data()['datetime'].toDate(),
-                uid: document.data()['uid'],
-                title: document.data()['title'],
-                content: document.data()['content'],
+                uid: document.data()['uid'] as String,
+                title: document.data()['title'] as String,
+                content: document.data()['content'] as String,
                 emoji: document.data()['emoji']),
           );
           _markedDateList.add(
               document.data()['datetime'].toDate(),
               Event(
                   date: document.data()['datetime'].toDate(),
-                  icon: eventIcon('emoji')));
+                  icon: Container(
+                      child: Image.asset(
+                    'assets/emoji-${mood[document.data()['emoji']]}.png',
+                  ))));
+          print(document.data()['datetime']);
         }
         notifyListeners();
       });

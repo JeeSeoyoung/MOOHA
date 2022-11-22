@@ -112,7 +112,7 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
         Navigator.pop(context);
       } else {
         if (label == '일기장') {
-          Navigator.pop(context);
+          Navigator.pushNamed(context, '/DetailPage');
         } else if (label == '갤러리')
           Navigator.pop(context);
         else if (label == '로그아웃') {
