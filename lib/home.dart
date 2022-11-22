@@ -1,19 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:mooha/provider/ApplicationState.dart';
 import 'package:mooha/services/firebase_auth_methods.dart';
 import 'package:mooha/writing_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 DateTime checkedDate = DateTime.now();
+User? user = FirebaseAuth.instance.currentUser;
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -82,9 +85,11 @@ class HomePage extends StatelessWidget {
           const SizedBox(
             height: 20.0,
           ),
-          Calender(
-            checkedDate: checkedDate,
-          ),
+          Consumer<ApplicationsState>(
+              builder: (context, appState, _) => Calender(
+                    checkedDate: checkedDate,
+                    list: appState.markedDateList,
+                  )),
         ],
       ),
     );
@@ -106,9 +111,9 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
       if (label == '홈') {
         Navigator.pop(context);
       } else {
-        if (label == '일기장')
+        if (label == '일기장') {
           Navigator.pop(context);
-        else if (label == '갤러리')
+        } else if (label == '갤러리')
           Navigator.pop(context);
         else if (label == '로그아웃') {
           await FirebaseAuthMethods.logout();
@@ -120,8 +125,10 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
 }
 
 class Calender extends StatefulWidget {
-  Calender({Key? key, required this.checkedDate}) : super(key: key);
+  Calender({Key? key, required this.checkedDate, required this.list})
+      : super(key: key);
   late DateTime checkedDate;
+  final EventList<Event> list;
   @override
   State<Calender> createState() => _CalenderState();
 }
@@ -132,12 +139,11 @@ class _CalenderState extends State<Calender> {
   String _currentMonth = DateFormat.yMMM().format(DateTime.now());
   DateTime _targetDateTime = DateTime.now();
 
-  // get _markedDateMap => null;
   static final Widget _eventIcon = Container(
       child: Image.asset(
     'assets/emoji-smile.png',
-    color: Colors.blue,
   ));
+
   final EventList<Event> _markedDateMap = EventList<Event>(
     events: {
       DateTime(2022, 11, 10): [
@@ -149,6 +155,16 @@ class _CalenderState extends State<Calender> {
       ],
     },
   );
+
+  // void initState() {
+  //   showEmoji();
+  //   super.initState();
+  // }
+
+  // showEmoji() {
+  //   widget.list.map(
+  //       (e) => {_markedDateMap.add(e[0], Event(date: e[0], icon: _eventIcon))});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -196,8 +212,8 @@ class _CalenderState extends State<Calender> {
             },
 
             //marked button
-            markedDateIconMargin: 2.0,
-            markedDatesMap: _markedDateMap,
+            // markedDateIconMargin: 2.0,
+            markedDatesMap: widget.list,
             markedDateCustomShapeBorder:
                 const CircleBorder(side: BorderSide(color: Colors.transparent)),
             markedDateCustomTextStyle: const TextStyle(
