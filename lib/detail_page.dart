@@ -59,72 +59,57 @@ class DiaryList extends StatefulWidget {
 
 class _DiaryListState extends State<DiaryList> {
   Map mood = {
-    1: 'smile',
-    2: 'angry',
-    3: 'dizzy',
-    4: 'expressionless',
-    5: 'frown',
-    6: 'laughing',
-    7: 'sunglasses',
+    0: 'smile',
+    1: 'angry',
+    2: 'dizzy',
+    3: 'expressionless',
+    4: 'frown',
+    5: 'laughing',
+    6: 'sunglasses',
   };
   // final year = DateFormat('yyyy').format(checkedDate);
   //   final monthAndDay = DateFormat('MM월 dd일').format(checkedDate);
   //   final dayOfWeek = DateFormat.E('ko_KR').format(checkedDate);
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('user')
-          .doc(user!.uid)
-          .collection('diary')
-          .orderBy('datetime', descending: true)
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-        if (streamSnapshot.hasData) {
-          return ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            physics: ScrollPhysics(),
-            itemCount: widget.detail.length,
-            itemBuilder: ((context, index) {
-              late DocumentSnapshot documentSnapshot =
-                  streamSnapshot.data!.docs[index];
-              return Container(
-                padding: EdgeInsets.all(30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset(
-                          'assets/emoji-${mood[documentSnapshot['emoji']]}.png',
-                          width: 32,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(DateFormat('yyyy')
-                                .format(documentSnapshot['datetime'].toDate())),
-                            Text(DateFormat('MM월 dd일')
-                                .format(documentSnapshot['datetime'].toDate()))
-                          ],
-                        )
-                      ],
-                    ),
-                    Text(documentSnapshot['title']),
-                    Text(documentSnapshot['content']),
-                  ],
-                ),
-              );
-            }),
-          );
-        } else {
-          return SizedBox();
-        }
-      },
+    return ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      physics: ScrollPhysics(),
+      itemCount: widget.detail.length,
+      itemBuilder: ((context, index) {
+        return Container(
+          padding: EdgeInsets.all(30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  // Text(widget.detail[index].title),
+                  Image.asset(
+                    'assets/emoji-${mood[widget.detail[index].emoji]}.png',
+                    width: 32,
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(DateFormat('yyyy')
+                          .format(widget.detail[index].datetime)),
+                      Text(DateFormat('MM월 dd일')
+                          .format(widget.detail[index].datetime))
+                    ],
+                  )
+                ],
+              ),
+              Text(widget.detail[index].title),
+              Text(widget.detail[index].content),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

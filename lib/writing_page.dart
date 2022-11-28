@@ -22,7 +22,7 @@ class WritingPage extends StatelessWidget {
         .collection('user')
         .doc(user!.uid)
         .collection('diary')
-        .doc(datetime.toString());
+        .doc();
     final json = {
       'datetime': datetime,
       'uid': user.uid,
@@ -156,13 +156,13 @@ class _MoodButtonsState extends State<MoodButtons> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        CustomRadioButton('emoji-smile', 1),
-        CustomRadioButton('emoji-angry', 2),
-        CustomRadioButton('emoji-dizzy', 3),
-        CustomRadioButton('emoji-expressionless', 4),
-        CustomRadioButton('emoji-frown', 5),
-        CustomRadioButton('emoji-laughing', 6),
-        CustomRadioButton('emoji-sunglasses', 7),
+        CustomRadioButton('emoji-smile', 0),
+        CustomRadioButton('emoji-angry', 1),
+        CustomRadioButton('emoji-dizzy', 2),
+        CustomRadioButton('emoji-expressionless', 3),
+        CustomRadioButton('emoji-frown', 4),
+        CustomRadioButton('emoji-laughing', 5),
+        CustomRadioButton('emoji-sunglasses', 6),
       ],
     );
   }

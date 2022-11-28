@@ -1,13 +1,26 @@
-# mooha
+# MOOHA
 
-This App is Calender for Recording today's Mood
+오늘의 기분을 기록하는 개인 일기장 앱
 
-## Language
+## About
+* ### Project
+  * 개인 프로젝트
+* ### Duration
+  * 진행 중
 
-Flutter
+* ### Technical Stack
+  * Framework - Flutter
+  * DB - Firebase
 
-## Server
+* ### Functions
+  * Google Sign In
+  * 각 날짜별 일기 작성
+  * 달력에 해당 날짜에 기록된 기분 이모지로 표시
+  * 작성한 일기 목록 확인
 
-Firebase
+### Prototype
+![moooooha](https://user-images.githubusercontent.com/108703281/203540225-dc190e11-e0ea-4e9a-9556-5877f7a3965d.JPG)
+
+
 
 

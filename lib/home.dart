@@ -59,10 +59,7 @@ class HomePage extends StatelessWidget {
                   const SizedBox(
                     height: 9.0,
                   ),
-                  Text(
-                    '${user?.email}',
-                    style: const TextStyle(fontSize: 12.0),
-                  ),
+                  drawerName(),
                 ],
               ),
             ),
@@ -96,6 +93,24 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class drawerName extends StatefulWidget {
+  const drawerName({Key? key}) : super(key: key);
+
+  @override
+  State<drawerName> createState() => _drawerNameState();
+}
+
+class _drawerNameState extends State<drawerName> {
+  User? user = FirebaseAuth.instance.currentUser;
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '${user?.email}',
+      style: const TextStyle(fontSize: 12.0),
+    );
+  }
+}
+
 ListTile _buildMenu(IconData icon, String label, BuildContext context) {
   return ListTile(
     leading: Icon(
@@ -111,6 +126,7 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
       if (label == '홈') {
         Navigator.pop(context);
       } else {
+        Navigator.pop(context);
         if (label == '일기장') {
           Navigator.pushNamed(context, '/DetailPage');
         } else if (label == '갤러리')

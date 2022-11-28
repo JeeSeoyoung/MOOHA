@@ -11,78 +11,74 @@ import 'package:provider/provider.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 
 class ApplicationsState extends ChangeNotifier {
+  ApplicationsState() {
+    init();
+  }
   User? user = FirebaseAuth.instance.currentUser;
   StreamSubscription<QuerySnapshot>? _diaryStreamSubscription;
-  List<DiaryDetail> _diaryDetail = [];
-  List<DiaryDetail> get diaryDetail => _diaryDetail;
   Map mood = {
-    1: 'smile',
-    2: 'angry',
-    3: 'dizzy',
-    4: 'expressionless',
-    5: 'frown',
-    6: 'laughing',
-    7: 'sunglasses',
+    0: 'smile',
+    1: 'angry',
+    2: 'dizzy',
+    3: 'expressionless',
+    4: 'frown',
+    5: 'laughing',
+    6: 'sunglasses',
   };
 
-  // static final Widget _eventIcon = Container(
-  //     child: Image.asset(
-  //   'assets/emoji-dizzy.png',
-  // ));
-  // List<List<dynamic>> _markedDateList = [];
-  // List<List<dynamic>> get markedDateList => _markedDateList;
-
-  late EventList<Event> _markedDateList = EventList<Event>(
+  List<DiaryDetail> _diaryDetail = [];
+  List<DiaryDetail> get diaryDetail => _diaryDetail;
+  EventList<Event> _markedDateList = EventList<Event>(
     events: {},
   );
   EventList<Event> get markedDateList => _markedDateList;
 
-  ApplicationsState() {
-    init();
-  }
   Future<void> init() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    if (user != null) {
-      print('Login ~~~~~~~~~~~~~~~~~~~~~~');
-      _diaryStreamSubscription = FirebaseFirestore.instance
-          .collection('user')
-          .doc(user!.uid)
-          .collection('diary')
-          .snapshots()
-          .listen((snapshot) {
+    _diaryDetail = [];
+    _markedDateList = EventList(events: {});
+
+    FirebaseAuth.instance.userChanges().listen((user) {
+      if (user != null) {
+        print('Login ~~~~~~~~~~~~~~~~~~~~~~');
+        _diaryStreamSubscription = FirebaseFirestore.instance
+            .collection('user')
+            .doc(user.uid)
+            .collection('diary')
+            .orderBy('datetime')
+            .snapshots()
+            .listen((snapshot) {
+          _diaryDetail = [];
+          _markedDateList = EventList(events: {});
+          for (final document in snapshot.docs) {
+            _diaryDetail.add(
+              DiaryDetail(
+                  datetime: document.data()['datetime'].toDate(),
+                  uid: document.data()['uid'] as String,
+                  title: document.data()['title'] as String,
+                  content: document.data()['content'] as String,
+                  emoji: document.data()['emoji']),
+            );
+            _markedDateList.add(
+                document.data()['datetime'].toDate(),
+                Event(
+                    date: document.data()['datetime'].toDate(),
+                    icon: Image.asset(
+                      'assets/emoji-${mood[document.data()['emoji']]}.png',
+                    )));
+          }
+          notifyListeners();
+        });
+      } else {
+        print('Log Out~~~~~~~~~~~~~~~~~~~~~~~~~~~');
         _diaryDetail = [];
         _markedDateList = EventList(events: {});
-        // _markedDateList = [];
-        for (final document in snapshot.docs) {
-          _diaryDetail.add(
-            DiaryDetail(
-                datetime: document.data()['datetime'].toDate(),
-                uid: document.data()['uid'] as String,
-                title: document.data()['title'] as String,
-                content: document.data()['content'] as String,
-                emoji: document.data()['emoji']),
-          );
-          _markedDateList.add(
-              document.data()['datetime'].toDate(),
-              Event(
-                  date: document.data()['datetime'].toDate(),
-                  icon: Container(
-                      child: Image.asset(
-                    'assets/emoji-${mood[document.data()['emoji']]}.png',
-                  ))));
-          print(document.data()['datetime']);
-        }
-        notifyListeners();
-      });
-    } else {
-      print('Log Out~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-      _diaryDetail = [];
-      _markedDateList = EventList(events: {});
-    }
-    notifyListeners();
+        _diaryStreamSubscription?.cancel();
+      }
 
-    FirebaseAuth.instance.userChanges().listen((user) {});
+      notifyListeners();
+    });
   }
 
   Future<DocumentReference> createDiaryDocs(
