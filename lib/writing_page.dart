@@ -132,19 +132,17 @@ class MoodButtons extends StatefulWidget {
 }
 
 class _MoodButtonsState extends State<MoodButtons> {
-  Widget CustomRadioButton(String text, int index) {
+  Widget CustomRadioButton(String text, int index, ColorFilter color) {
     // index = 1;
     return GestureDetector(
       onTap: () {
         setState(() {
           value = index;
-          print('value=$value');
-          print('index=$index');
         });
       },
       child: ColorFiltered(
         colorFilter: (value == index)
-            ? const ColorFilter.mode(Colors.yellow, BlendMode.modulate)
+            ? color
             : const ColorFilter.mode(Colors.white, BlendMode.modulate),
         child: Image.asset('assets/${text}.png'),
       ),
@@ -156,13 +154,20 @@ class _MoodButtonsState extends State<MoodButtons> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        CustomRadioButton('emoji-smile', 0),
-        CustomRadioButton('emoji-angry', 1),
-        CustomRadioButton('emoji-dizzy', 2),
-        CustomRadioButton('emoji-expressionless', 3),
-        CustomRadioButton('emoji-frown', 4),
-        CustomRadioButton('emoji-laughing', 5),
-        CustomRadioButton('emoji-sunglasses', 6),
+        CustomRadioButton('emoji-smile', 0,
+            ColorFilter.mode(Colors.yellowAccent, BlendMode.modulate)),
+        CustomRadioButton('emoji-laughing', 1,
+            ColorFilter.mode(Colors.amberAccent, BlendMode.modulate)),
+        CustomRadioButton('emoji-expressionless', 2,
+            ColorFilter.mode(Colors.lightGreenAccent, BlendMode.modulate)),
+        CustomRadioButton('emoji-sunglasses', 3,
+            ColorFilter.mode(Colors.tealAccent, BlendMode.modulate)),
+        CustomRadioButton('emoji-dizzy', 4,
+            ColorFilter.mode(Colors.lightBlueAccent, BlendMode.modulate)),
+        CustomRadioButton('emoji-frown', 5,
+            ColorFilter.mode(Colors.purpleAccent, BlendMode.modulate)),
+        CustomRadioButton('emoji-angry', 6,
+            ColorFilter.mode(Colors.redAccent, BlendMode.modulate)),
       ],
     );
   }

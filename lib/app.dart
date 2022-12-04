@@ -35,7 +35,13 @@ class MoohaApp extends StatelessWidget {
               fontWeight: FontWeight.normal),
           headline3: TextStyle(
               color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w600),
+          headline4: TextStyle(
+              color: Colors.black,
+              fontSize: 20.0,
+              fontWeight: FontWeight.normal),
           bodyText1: TextStyle(
+              color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w600),
+          bodyText2: TextStyle(
               color: Colors.black,
               fontSize: 16.0,
               fontWeight: FontWeight.normal),

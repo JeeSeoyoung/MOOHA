@@ -144,7 +144,7 @@ class Calender extends StatefulWidget {
   Calender({Key? key, required this.checkedDate, required this.list})
       : super(key: key);
   late DateTime checkedDate;
-  final EventList<Event> list;
+  late EventList<Event> list;
   @override
   State<Calender> createState() => _CalenderState();
 }

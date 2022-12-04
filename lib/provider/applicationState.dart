@@ -18,12 +18,12 @@ class ApplicationsState extends ChangeNotifier {
   StreamSubscription<QuerySnapshot>? _diaryStreamSubscription;
   Map mood = {
     0: 'smile',
-    1: 'angry',
-    2: 'dizzy',
-    3: 'expressionless',
-    4: 'frown',
-    5: 'laughing',
-    6: 'sunglasses',
+    1: 'laughing',
+    2: 'expressionless',
+    3: 'sunglasses',
+    4: 'dizzy',
+    5: 'frown',
+    6: 'angry',
   };
 
   List<DiaryDetail> _diaryDetail = [];
@@ -38,47 +38,55 @@ class ApplicationsState extends ChangeNotifier {
         options: DefaultFirebaseOptions.currentPlatform);
     _diaryDetail = [];
     _markedDateList = EventList(events: {});
+    GetList(user);
 
     FirebaseAuth.instance.userChanges().listen((user) {
-      if (user != null) {
-        print('Login ~~~~~~~~~~~~~~~~~~~~~~');
-        _diaryStreamSubscription = FirebaseFirestore.instance
-            .collection('user')
-            .doc(user.uid)
-            .collection('diary')
-            .orderBy('datetime')
-            .snapshots()
-            .listen((snapshot) {
-          _diaryDetail = [];
-          _markedDateList = EventList(events: {});
-          for (final document in snapshot.docs) {
-            _diaryDetail.add(
-              DiaryDetail(
-                  datetime: document.data()['datetime'].toDate(),
-                  uid: document.data()['uid'] as String,
-                  title: document.data()['title'] as String,
-                  content: document.data()['content'] as String,
-                  emoji: document.data()['emoji']),
-            );
-            _markedDateList.add(
-                document.data()['datetime'].toDate(),
-                Event(
-                    date: document.data()['datetime'].toDate(),
-                    icon: Image.asset(
-                      'assets/emoji-${mood[document.data()['emoji']]}.png',
-                    )));
-          }
-          notifyListeners();
-        });
-      } else {
-        print('Log Out~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-        _diaryDetail = [];
-        _markedDateList = EventList(events: {});
-        _diaryStreamSubscription?.cancel();
-      }
+      GetList(user);
 
       notifyListeners();
     });
+  }
+
+  Future<void> GetList(User? user) async {
+    if (user != null) {
+      print('Login ~~~~~~~~~~~~~~~~~~~~~~');
+      _diaryStreamSubscription = FirebaseFirestore.instance
+          .collection('user')
+          .doc(user.uid)
+          .collection('diary')
+          .orderBy('datetime', descending: true)
+          .snapshots()
+          .listen((snapshot) {
+        _diaryDetail = [];
+        _markedDateList = new EventList(events: {});
+        for (final document in snapshot.docs) {
+          _markedDateList.add(
+              document.data()['datetime'].toDate(),
+              Event(
+                date: document.data()['datetime'].toDate(),
+                title: document.data()['title'],
+                icon: EmojiIcon(mood: mood, document: document),
+                // icon: Image.asset(
+                //   'assets/emoji-${mood[document.data()['emoji']]}.png',
+                // ),
+              ));
+          _diaryDetail.add(
+            DiaryDetail(
+                datetime: document.data()['datetime'].toDate(),
+                uid: document.data()['uid'] as String,
+                title: document.data()['title'] as String,
+                content: document.data()['content'] as String,
+                emoji: document.data()['emoji']),
+          );
+        }
+        notifyListeners();
+      });
+    } else {
+      print('Log Out~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+      _diaryDetail = [];
+      _markedDateList = EventList(events: {});
+      _diaryStreamSubscription?.cancel();
+    }
   }
 
   Future<DocumentReference> createDiaryDocs(
@@ -107,6 +115,34 @@ class ApplicationsState extends ChangeNotifier {
         print(diary.get('emoji'));
       }
     }
+  }
+}
+
+class EmojiIcon extends StatelessWidget {
+  const EmojiIcon({
+    Key? key,
+    required this.mood,
+    required this.document,
+  }) : super(key: key);
+
+  final Map mood;
+  final QueryDocumentSnapshot<Map<String, dynamic>> document;
+
+  @override
+  Widget build(BuildContext context) {
+    Map color = {
+      0: const ColorFilter.mode(Colors.yellowAccent, BlendMode.modulate),
+      1: const ColorFilter.mode(Colors.amberAccent, BlendMode.modulate),
+      2: const ColorFilter.mode(Colors.lightGreenAccent, BlendMode.modulate),
+      3: const ColorFilter.mode(Colors.tealAccent, BlendMode.modulate),
+      4: const ColorFilter.mode(Colors.lightBlueAccent, BlendMode.modulate),
+      5: const ColorFilter.mode(Colors.purpleAccent, BlendMode.modulate),
+      6: const ColorFilter.mode(Colors.redAccent, BlendMode.modulate),
+    };
+    return ColorFiltered(
+      colorFilter: color[document.data()['emoji']],
+      child: Image.asset('assets/emoji-${mood[document.data()['emoji']]}.png'),
+    );
   }
 }
 
