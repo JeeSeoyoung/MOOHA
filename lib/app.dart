@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'detail_page.dart';
 import 'home.dart';
+import 'list_page.dart';
 import 'login.dart';
 import 'writing_page.dart';
 
@@ -51,7 +52,8 @@ class MoohaApp extends StatelessWidget {
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
         '/': (BuildContext context) => const HomePage(),
-        '/DetailPage': (BuildContext context) => const DetailPage(),
+        // '/DetailPage': (BuildContext context) => const DetailPage(),
+        '/ListPage': (BuildContext context) => const ListPage(),
       },
     );
   }

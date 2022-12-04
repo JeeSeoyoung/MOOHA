@@ -70,7 +70,7 @@ class WritingPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline3,
                 ),
                 const SizedBox(height: 20.0),
-                MoodButtons(),
+                const MoodButtons(),
                 const SizedBox(height: 20.0),
                 Container(
                   padding: const EdgeInsets.all(30.0),
@@ -105,13 +105,16 @@ class WritingPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                OutlinedButton(
-                  onPressed: () {
-                    AddDiary(_titleController.text, _contentController.text,
-                        checkedDate, value);
-                    Navigator.pop(context);
-                  },
-                  child: Text('저장하기'),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      AddDiary(_titleController.text, _contentController.text,
+                          checkedDate, value);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('저장하기'),
+                  ),
                 )
               ],
             ),

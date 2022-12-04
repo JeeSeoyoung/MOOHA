@@ -3,19 +3,33 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mooha/provider/ApplicationState.dart';
-import 'package:mooha/services/firebase_auth_methods.dart';
-import 'package:provider/provider.dart';
-
 import 'package:intl/intl.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 
 class DetailPage extends StatelessWidget {
-  const DetailPage({Key? key}) : super(key: key);
+  const DetailPage({Key? key, required this.document}) : super(key: key);
+  final QueryDocumentSnapshot<Map<String, dynamic>> document;
+  void deleteDoc(QueryDocumentSnapshot documentSnapshot) {
+    FirebaseFirestore.instance
+        .collection('user')
+        .doc(user!.uid)
+        .collection('diary')
+        .doc(documentSnapshot.id)
+        .delete();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Map mood = {
+      0: 'smile',
+      1: 'laughing',
+      2: 'expressionless',
+      3: 'sunglasses',
+      4: 'dizzy',
+      5: 'frown',
+      6: 'angry',
+    };
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -32,9 +46,93 @@ class DetailPage extends StatelessWidget {
         children: [
           Column(
             children: [
-              Consumer<ApplicationsState>(
-                builder: (context, appState, _) => DiaryList(
-                  detail: appState.diaryDetail,
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        EmojiIcon(
+                          mood: mood,
+                          document: document,
+                        ),
+                        const SizedBox(
+                          width: 15.0,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              DateFormat('yyyy')
+                                  .format(document.data()['datetime'].toDate()),
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Text(
+                              DateFormat('MM월 dd일')
+                                  .format(document.data()['datetime'].toDate()),
+                              style: Theme.of(context).textTheme.bodyText1,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1.0,
+                          )),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            document.data()['title'],
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          const Divider(
+                            height: 30,
+                            thickness: 1,
+                            color: Colors.grey,
+                          ),
+                          Text(document.data()['content']),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            deleteDoc(document);
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            '삭제',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('수정'),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ],
@@ -46,110 +144,12 @@ class DetailPage extends StatelessWidget {
   }
 }
 
-class DiaryList extends StatefulWidget {
-  const DiaryList({Key? key, required this.detail}) : super(key: key);
-  final List<DiaryDetail> detail;
-  @override
-  State<DiaryList> createState() => _DiaryListState();
-}
-
-class _DiaryListState extends State<DiaryList> {
-  Map mood = {
-    0: 'smile',
-    1: 'laughing',
-    2: 'expressionless',
-    3: 'sunglasses',
-    4: 'dizzy',
-    5: 'frown',
-    6: 'angry',
-  };
-  // final year = DateFormat('yyyy').format(checkedDate);
-  //   final monthAndDay = DateFormat('MM월 dd일').format(checkedDate);
-  //   final dayOfWeek = DateFormat.E('ko_KR').format(checkedDate);
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      physics: const ScrollPhysics(),
-      itemCount: widget.detail.length,
-      itemBuilder: ((context, index) {
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  EmojiIcon(mood: mood, widget: widget, index: index),
-                  const SizedBox(
-                    width: 15.0,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        DateFormat('yyyy')
-                            .format(widget.detail[index].datetime),
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        DateFormat('MM월 dd일')
-                            .format(widget.detail[index].datetime),
-                        style: Theme.of(context).textTheme.bodyText1,
-                      )
-                    ],
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.0,
-                    )),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.detail[index].title,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                    const Divider(
-                      height: 30,
-                      thickness: 1,
-                      color: Colors.grey,
-                    ),
-                    Text(widget.detail[index].content),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      }),
-    );
-  }
-}
-
 class EmojiIcon extends StatelessWidget {
-  const EmojiIcon({
-    Key? key,
-    required this.mood,
-    required this.widget,
-    required this.index,
-  }) : super(key: key);
+  const EmojiIcon({Key? key, required this.mood, required this.document})
+      : super(key: key);
 
   final Map mood;
-  final DiaryList widget;
-  final int index;
+  final QueryDocumentSnapshot<Map<String, dynamic>> document;
 
   @override
   Widget build(BuildContext context) {
@@ -163,9 +163,8 @@ class EmojiIcon extends StatelessWidget {
       6: const ColorFilter.mode(Colors.redAccent, BlendMode.modulate),
     };
     return ColorFiltered(
-      colorFilter: color[widget.detail[index].emoji],
-      child:
-          Image.asset('assets/emoji-${mood[widget.detail[index].emoji]}.png'),
+      colorFilter: color[document.data()['emoji']],
+      child: Image.asset('assets/emoji-${mood[document.data()['emoji']]}.png'),
     );
   }
 }

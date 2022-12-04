@@ -128,7 +128,7 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
       } else {
         Navigator.pop(context);
         if (label == '일기장') {
-          Navigator.pushNamed(context, '/DetailPage');
+          Navigator.pushNamed(context, '/ListPage');
         } else if (label == '갤러리')
           Navigator.pop(context);
         else if (label == '로그아웃') {
@@ -218,7 +218,7 @@ class _CalenderState extends State<Calender> {
             selectedDayBorderColor: Colors.transparent,
             selectedDayButtonColor: Colors.red,
             onDayPressed: (date, events) {
-              this.setState(() {
+              setState(() {
                 _currentDate2 = date;
                 widget.checkedDate = date;
               });
@@ -237,7 +237,7 @@ class _CalenderState extends State<Calender> {
               color: Colors.transparent,
             ),
             markedDateShowIcon: true,
-            markedDateIconMaxShown: 2,
+            markedDateIconMaxShown: 1,
             markedDateIconBuilder: (event) {
               return event.icon;
             },
@@ -262,7 +262,7 @@ class _CalenderState extends State<Calender> {
               fontSize: 16,
             ),
             onCalendarChanged: (DateTime date) {
-              this.setState(() {
+              setState(() {
                 _targetDateTime = date;
                 _currentMonth = DateFormat.yMMM().format(_targetDateTime);
               });

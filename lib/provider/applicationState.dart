@@ -10,6 +10,8 @@ import 'package:mooha/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 
+import '../detail_page.dart';
+
 class ApplicationsState extends ChangeNotifier {
   ApplicationsState() {
     init();
@@ -139,9 +141,21 @@ class EmojiIcon extends StatelessWidget {
       5: const ColorFilter.mode(Colors.purpleAccent, BlendMode.modulate),
       6: const ColorFilter.mode(Colors.redAccent, BlendMode.modulate),
     };
-    return ColorFiltered(
-      colorFilter: color[document.data()['emoji']],
-      child: Image.asset('assets/emoji-${mood[document.data()['emoji']]}.png'),
+    return GestureDetector(
+      onTap: () {
+        // Navigator.pushNamed(context, '/DetailPage');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailPage(
+                      document: document,
+                    )));
+      },
+      child: ColorFiltered(
+        colorFilter: color[document.data()['emoji']],
+        child:
+            Image.asset('assets/emoji-${mood[document.data()['emoji']]}.png'),
+      ),
     );
   }
 }
