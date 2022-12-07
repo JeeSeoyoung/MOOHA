@@ -1,18 +1,23 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mooha/provider/ApplicationState.dart';
+import 'package:provider/provider.dart';
+
+import 'detail_page.dart';
 
 int modifiedEmoji = 0;
 
 class EditingPage extends StatelessWidget {
   User? user = FirebaseAuth.instance.currentUser;
-  EditingPage({Key? key, required this.document}) : super(key: key);
+  EditingPage({
+    Key? key,
+    required this.document,
+  }) : super(key: key);
   final QueryDocumentSnapshot<Map<String, dynamic>> document;
-  final TextEditingController _titleController = TextEditingController();
-
-  final TextEditingController _contentController = TextEditingController();
 
   void updateDoc(String title, String content, int emoji) {
     FirebaseFirestore.instance
@@ -30,23 +35,6 @@ class EditingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final year =
-        DateFormat('yyyy').format(document.data()['datetime'].toDate());
-    final monthAndDay =
-        DateFormat('MM월 dd일').format(document.data()['datetime'].toDate());
-    final dayOfWeek =
-        DateFormat.E('ko_KR').format(document.data()['datetime'].toDate());
-    Map mood = {
-      0: 'smile',
-      1: 'laughing',
-      2: 'expressionless',
-      3: 'sunglasses',
-      4: 'dizzy',
-      5: 'frown',
-      6: 'angry',
-    };
-    _titleController.text = document.data()['title'];
-    _contentController.text = document.data()['content'];
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -60,76 +48,122 @@ class EditingPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          Consumer<ApplicationsState>(
+              builder: (context, appState, _) => Editing(
+                    document: document,
+                    detail: appState.diaryDetail,
+                    updateDoc: (title, content, emoji) =>
+                        updateDoc(title, content, emoji),
+                  ))
+        ],
+      ),
+    );
+  }
+}
+
+class Editing extends StatefulWidget {
+  Editing(
+      {Key? key,
+      required this.document,
+      required this.detail,
+      required this.updateDoc})
+      : super(key: key);
+  final QueryDocumentSnapshot<Map<String, dynamic>> document;
+  late List<DiaryDetail> detail;
+  final FutureOr<void> Function(String title, String content, int emoji)
+      updateDoc;
+
+  @override
+  State<Editing> createState() => _EditingState();
+}
+
+class _EditingState extends State<Editing> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    _titleController.text = widget.document.data()['title'];
+    _contentController.text = widget.document.data()['content'];
+    final year =
+        DateFormat('yyyy').format(widget.document.data()['datetime'].toDate());
+    final monthAndDay = DateFormat('MM월 dd일')
+        .format(widget.document.data()['datetime'].toDate());
+    final dayOfWeek = DateFormat.E('ko_KR')
+        .format(widget.document.data()['datetime'].toDate());
+    Map mood = {
+      0: 'smile',
+      1: 'laughing',
+      2: 'expressionless',
+      3: 'sunglasses',
+      4: 'dizzy',
+      5: 'frown',
+      6: 'angry',
+    };
+    return Container(
+      padding: const EdgeInsets.all(30.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${year}',
+            style: Theme.of(context).textTheme.headline2,
+          ),
+          Text(
+            '${monthAndDay} ${dayOfWeek}요일',
+            style: Theme.of(context).textTheme.headline1,
+          ),
+          const SizedBox(height: 30.0),
+          Text(
+            '오늘의 기분을 이모지로 기록해요',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          const SizedBox(height: 20.0),
+          MoodButtons(
+            emoji: widget.document.data()['emoji'],
+          ),
+          const SizedBox(height: 20.0),
           Container(
             padding: const EdgeInsets.all(30.0),
+            height: 300.0,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1.0,
+                )),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${year}',
-                  style: Theme.of(context).textTheme.headline2,
+                TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(hintText: '제목을 입력하세요'),
                 ),
-                Text(
-                  '${monthAndDay} ${dayOfWeek}요일',
-                  style: Theme.of(context).textTheme.headline1,
-                ),
-                const SizedBox(height: 30.0),
-                Text(
-                  '오늘의 기분을 이모지로 기록해요',
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-                const SizedBox(height: 20.0),
-                MoodButtons(
-                  emoji: document.data()['emoji'],
-                ),
-                const SizedBox(height: 20.0),
-                Container(
-                  padding: const EdgeInsets.all(30.0),
-                  height: 300.0,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 1.0,
-                      )),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: _titleController,
-                        decoration:
-                            const InputDecoration(hintText: '제목을 입력하세요'),
-                      ),
-                      Scrollbar(
-                        child: SizedBox(
-                          height: 190,
-                          child: TextField(
-                            controller: _contentController,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            decoration: const InputDecoration(
-                                hintText: '내용을 입력하세요',
-                                border: InputBorder.none),
-                          ),
-                        ),
-                      ),
-                    ],
+                Scrollbar(
+                  child: SizedBox(
+                    height: 190,
+                    child: TextField(
+                      controller: _contentController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                          hintText: '내용을 입력하세요', border: InputBorder.none),
+                    ),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      updateDoc(_titleController.text, _contentController.text,
-                          modifiedEmoji);
-                      Navigator.pushNamed(context, '/');
-                    },
-                    child: const Text('수정하기'),
-                  ),
-                )
               ],
             ),
           ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: OutlinedButton(
+              onPressed: () async {
+                await widget.updateDoc(_titleController.text,
+                    _contentController.text, modifiedEmoji);
+                Navigator.pushNamed(context, '/');
+              },
+              child: const Text('수정하기'),
+            ),
+          )
         ],
       ),
     );

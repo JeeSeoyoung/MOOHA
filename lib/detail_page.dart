@@ -4,34 +4,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mooha/provider/ApplicationState.dart';
+import 'package:provider/provider.dart';
 
 import 'edit_page.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   const DetailPage({Key? key, required this.document}) : super(key: key);
   final QueryDocumentSnapshot<Map<String, dynamic>> document;
-  void deleteDoc(QueryDocumentSnapshot documentSnapshot) {
-    FirebaseFirestore.instance
-        .collection('user')
-        .doc(user!.uid)
-        .collection('diary')
-        .doc(documentSnapshot.id)
-        .delete();
-  }
 
   @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  @override
   Widget build(BuildContext context) {
-    Map mood = {
-      0: 'smile',
-      1: 'laughing',
-      2: 'expressionless',
-      3: 'sunglasses',
-      4: 'dizzy',
-      5: 'frown',
-      6: 'angry',
-    };
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -48,105 +38,143 @@ class DetailPage extends StatelessWidget {
         children: [
           Column(
             children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        EmojiIcon(
-                          mood: mood,
-                          document: document,
-                        ),
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              DateFormat('yyyy')
-                                  .format(document.data()['datetime'].toDate()),
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text(
-                              DateFormat('MM월 dd일')
-                                  .format(document.data()['datetime'].toDate()),
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(5)),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1.0,
-                          )),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            document.data()['title'],
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                          const Divider(
-                            height: 30,
-                            thickness: 1,
-                            color: Colors.grey,
-                          ),
-                          Text(document.data()['content']),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            deleteDoc(document);
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            '삭제',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditingPage(
-                                          document: document,
-                                        )));
-                          },
-                          child: const Text('수정'),
-                        ),
-                      ],
-                    )
-                  ],
+              Consumer<ApplicationsState>(
+                builder: (context, appState, _) => Details(
+                  document: widget.document,
+                  detail: appState.diaryDetail,
                 ),
-              ),
+              )
             ],
           )
         ],
       ),
       resizeToAvoidBottomInset: false,
+    );
+  }
+}
+
+class Details extends StatefulWidget {
+  Details({Key? key, required this.document, required this.detail})
+      : super(key: key);
+  final QueryDocumentSnapshot<Map<String, dynamic>> document;
+  late List<DiaryDetail> detail;
+
+  @override
+  State<Details> createState() => _DetailsState();
+}
+
+class _DetailsState extends State<Details> {
+  @override
+  Widget build(BuildContext context) {
+    void deleteDoc(QueryDocumentSnapshot documentSnapshot) {
+      FirebaseFirestore.instance
+          .collection('user')
+          .doc(user!.uid)
+          .collection('diary')
+          .doc(documentSnapshot.id)
+          .delete();
+    }
+
+    Map mood = {
+      0: 'smile',
+      1: 'laughing',
+      2: 'expressionless',
+      3: 'sunglasses',
+      4: 'dizzy',
+      5: 'frown',
+      6: 'angry',
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              EmojiIcon(
+                mood: mood,
+                document: widget.document,
+              ),
+              const SizedBox(
+                width: 15.0,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    DateFormat('yyyy')
+                        .format(widget.document.data()['datetime'].toDate()),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Text(
+                    DateFormat('MM월 dd일')
+                        .format(widget.document.data()['datetime'].toDate()),
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )
+                ],
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1.0,
+                )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.document.data()['title'],
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                const Divider(
+                  height: 30,
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+                Text(widget.document.data()['content']),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              OutlinedButton(
+                onPressed: () {
+                  deleteDoc(widget.document);
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  '삭제',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditingPage(
+                                document: widget.document,
+                              )));
+                },
+                child: const Text('수정'),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
