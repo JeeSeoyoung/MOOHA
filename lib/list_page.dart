@@ -23,7 +23,7 @@ class ListPage extends StatelessWidget {
         elevation: Theme.of(context).appBarTheme.elevation,
         centerTitle: true,
         title: Text(
-          '일기장',
+          '일기리스트',
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),

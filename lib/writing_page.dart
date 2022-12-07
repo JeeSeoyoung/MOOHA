@@ -70,7 +70,7 @@ class WritingPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline3,
                 ),
                 const SizedBox(height: 20.0),
-                const MoodButtons(),
+                MoodButtons(),
                 const SizedBox(height: 20.0),
                 Container(
                   padding: const EdgeInsets.all(30.0),
@@ -126,25 +126,23 @@ class WritingPage extends StatelessWidget {
 }
 
 class MoodButtons extends StatefulWidget {
-  const MoodButtons({
-    Key? key,
-  }) : super(key: key);
-
+  MoodButtons({Key? key, emoji}) : super(key: key);
+  int emoji = 0;
   @override
   State<MoodButtons> createState() => _MoodButtonsState();
 }
 
 class _MoodButtonsState extends State<MoodButtons> {
   Widget CustomRadioButton(String text, int index, ColorFilter color) {
-    // index = 1;
     return GestureDetector(
       onTap: () {
         setState(() {
-          value = index;
+          widget.emoji = index;
+          value = widget.emoji;
         });
       },
       child: ColorFiltered(
-        colorFilter: (value == index)
+        colorFilter: (widget.emoji == index)
             ? color
             : const ColorFilter.mode(Colors.white, BlendMode.modulate),
         child: Image.asset('assets/${text}.png'),
