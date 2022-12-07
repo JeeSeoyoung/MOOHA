@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'edit_page.dart';
+
 User? user = FirebaseAuth.instance.currentUser;
 
 class DetailPage extends StatelessWidget {
@@ -126,7 +128,12 @@ class DetailPage extends StatelessWidget {
                         ),
                         OutlinedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditingPage(
+                                          document: document,
+                                        )));
                           },
                           child: const Text('수정'),
                         ),

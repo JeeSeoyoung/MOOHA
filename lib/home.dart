@@ -69,7 +69,6 @@ class HomePage extends StatelessWidget {
                 children: [
                   _buildMenu(Icons.home, '홈', context),
                   _buildMenu(Icons.book, '일기장', context),
-                  _buildMenu(Icons.photo_album, '갤러리', context),
                   _buildMenu(Icons.logout, '로그아웃', context),
                 ],
               ),
@@ -129,9 +128,7 @@ ListTile _buildMenu(IconData icon, String label, BuildContext context) {
         Navigator.pop(context);
         if (label == '일기장') {
           Navigator.pushNamed(context, '/ListPage');
-        } else if (label == '갤러리')
-          Navigator.pop(context);
-        else if (label == '로그아웃') {
+        } else if (label == '로그아웃') {
           await FirebaseAuthMethods.logout();
           Navigator.pushNamed(context, '/login');
         }
