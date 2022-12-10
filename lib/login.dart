@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mooha/services/firebase_auth_methods.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -59,12 +60,14 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(
                   height: 87,
                 ),
-                ElevatedButton(
-                    onPressed: () async {
-                      await LoginWithGoogle(context);
-                      AddUser();
-                    },
-                    child: const Text('Sign in with Google'))
+                SignInButton(
+                  Buttons.Google,
+                  text: "Sign up with Google",
+                  onPressed: () async {
+                    await LoginWithGoogle(context);
+                    AddUser();
+                  },
+                )
               ],
             )
           ],

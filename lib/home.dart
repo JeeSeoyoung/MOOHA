@@ -86,6 +86,8 @@ class HomePage extends StatelessWidget {
                     checkedDate: checkedDate,
                     list: appState.markedDateList,
                   )),
+          const SizedBox(height: 10),
+          // Chart(ranking: ranking)
         ],
       ),
     );

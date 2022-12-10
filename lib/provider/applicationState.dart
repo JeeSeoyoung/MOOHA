@@ -34,7 +34,16 @@ class ApplicationsState extends ChangeNotifier {
     events: {},
   );
   EventList<Event> get markedDateList => _markedDateList;
-
+  List _emojiRanking = [
+    {'class': 'smile', 'total': 1},
+    {'class': 'laughing', 'total': 1},
+    {'class': 'expressionless', 'total': 1},
+    {'class': 'sunglasses', 'total': 1},
+    {'class': 'dizzy', 'total': 1},
+    {'class': 'frown', 'total': 1},
+    {'class': 'angry', 'total': 1}
+  ];
+  List get emojiRanking => _emojiRanking;
   Future<void> init() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
@@ -61,6 +70,15 @@ class ApplicationsState extends ChangeNotifier {
           .listen((snapshot) {
         _diaryDetail = [];
         _markedDateList = new EventList(events: {});
+        _emojiRanking = [
+          {'class': 'smile', 'total': 1},
+          {'class': 'laughing', 'total': 1},
+          {'class': 'expressionless', 'total': 1},
+          {'class': 'sunglasses', 'total': 1},
+          {'class': 'dizzy', 'total': 1},
+          {'class': 'frown', 'total': 1},
+          {'class': 'angry', 'total': 1}
+        ];
         for (final document in snapshot.docs) {
           _markedDateList.add(
               document.data()['datetime'].toDate(),
@@ -80,6 +98,7 @@ class ApplicationsState extends ChangeNotifier {
                 content: document.data()['content'] as String,
                 emoji: document.data()['emoji']),
           );
+          _emojiRanking[document.data()['emoji']]['total'] += 5;
         }
         notifyListeners();
       });
