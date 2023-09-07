@@ -6,7 +6,7 @@
 * ### Project
   * 개인 프로젝트
 * ### Duration
-  * 2022년 12월 1달간
+  * 1 month
 
 * ### Technical Stack
   * Framework - Flutter
