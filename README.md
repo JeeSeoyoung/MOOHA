@@ -1,12 +1,12 @@
 # MOOHA
 
-오늘의 기분을 기록하는 개인 일기장 앱
+오늘의 기분을 이모지로 기록하는 개인 일기장 앱
 
 ## About
 * ### Project
   * 개인 프로젝트
 * ### Duration
-  * 진행 중
+  * 2022년 12월 1달간
 
 * ### Technical Stack
   * Framework - Flutter
