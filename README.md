@@ -17,6 +17,7 @@
   * 각 날짜별 일기 작성
   * 달력에 해당 날짜에 기록된 기분 이모지로 표시
   * 작성한 일기 목록 확인
+  * 기록된 이모지별 통계
 
 ### Prototype
 ![moooooha](https://user-images.githubusercontent.com/108703281/203540225-dc190e11-e0ea-4e9a-9556-5877f7a3965d.JPG)
